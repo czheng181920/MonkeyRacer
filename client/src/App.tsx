@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { getMembers } from './actions';
 
 function App() {
+  const [data, setData] = useState([{}]);
+
+  useEffect(() => {
+    getMembers().then((data) => {
+      setData(data)
+      console.log(data)
+    })
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
