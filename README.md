@@ -2,7 +2,7 @@
 
 A typing racer inspired by MonkeyType
 
-  
+![Monke](./images/monky.png)
 
 # Getting Started
 
