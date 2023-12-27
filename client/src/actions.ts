@@ -1,0 +1,1 @@
+export const getMembers = () => fetch('/api/members').then(res => res.json());
