@@ -11,7 +11,6 @@ def connected():
     """event listener when client connects to the server"""
     print(request.sid)
     print("client has connected")
-    emit("connect",{"data":f"id: {request.sid} is connected"})
 
 @socketio.on("disconnect")
 def disconnected():
