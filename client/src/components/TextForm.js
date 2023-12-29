@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { socket } from "../socket";
 
-export function TextForm() {
+const TextForm = (props) => {
     const [text, setText] = useState("");
 
-    function sendText(t) {
-        socket.emit("message", t)
-        setText(t)
-        console.log(t)
+    function sendText(input) {
+        socket.emit("race_input", {
+            passage: props.passage,
+            input: input,
+        })
+        setText(input)
+        console.log(input)
     }
 
     return (
@@ -17,7 +20,10 @@ export function TextForm() {
                 value={text} 
                 onChange={(e) => sendText(e.target.value)} 
                 placeholder="Type here"
+                className="input-text"
             />
         </>
     )
 }
+
+export default TextForm;

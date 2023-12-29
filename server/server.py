@@ -1,26 +1,98 @@
 from flask import Flask, request
 from flask_cors import CORS
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room, send
+from wordgen import get_random_words
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*")
+room_passage_map = {}
 
 @socketio.on("connect")
-def connected():
-    """event listener when client connects to the server"""
+def on_connect():
+    """Event listener when client connects to the server"""
     print(request.sid)
-    print("client has connected")
+    print("Client has connected")
+
 
 @socketio.on("disconnect")
 def disconnected():
-    """event listener when client disconnects to the server"""
-    print("user disconnected")
-    emit("disconnect",f"user {request.sid} disconnected",broadcast=True)
+    """Event listener when client disconnects to the server"""
+    print("Client has disconnected")
+
 
 @socketio.on("message")
 def message(data):
+    """Event listener for incoming messages
+
+    Args:
+        data: String message
+    """
     print("received: " + str(data))
+    
+@socketio.on("join")
+def on_join(data):
+    """Event handler for when client joins a room
+
+    Args:
+        data: {
+            username: String,
+            room: String
+        }
+    """
+    username = data['username']
+    room = data['room']
+    join_room(room)
+    emit("setup_game", room_passage_map[room], to=room)
+    print(username + " has entered the room.")
+
+
+@socketio.on("create_room")
+def create_room(data):
+    """Creates a new room
+
+    Args:
+        data: {
+            room: String
+        }
+    """
+    room = data['room']
+    join_room(room)
+    passage = get_random_words(10)
+    room_passage_map[room] = passage
+    emit("setup_game", passage)
+    print(room + " has been created.")
+
+@socketio.on("leave")
+def on_leave(data):
+    """Event handler for when client leaves a room
+
+    Args:
+        data: {
+            username: String,
+            room: String
+        
+        }
+    """
+    username = data['username']
+    room = data['room']
+    leave_room(room)
+    print(username + " has left the room.")
+
+@socketio.on("race_input")
+def process_race_input(data):
+    """Listens for racer input
+
+    Args:
+        data: {
+            passage: String,
+            input: String
+        }
+    """
+    passage = data['passage']
+    input = data['input']
+    print(passage + '\n' + input)
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=True, port=5001)

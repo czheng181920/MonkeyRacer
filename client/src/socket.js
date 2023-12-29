@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 const url = process.env.NODE_ENV === 'production' ? undefined : 'http://127.0.0.1:5001';
 
 export const socket = io(url, {
-    autoConnect: false,
+    autoConnect: true,
     transports: ["websocket"],
     cors: {
         origin: "http://localhost:3000/",
