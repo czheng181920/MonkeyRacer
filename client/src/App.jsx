@@ -12,6 +12,14 @@ function App() {
     socket.on('setup_game', (words) => {
       setPassage(words.join(" "));
     });
+
+    socket.on('incorrect_input', (data) => {
+      console.log(data)
+    });
+
+    socket.on('correct_input', () => {
+      
+    });
   }, []);
 
   return (
