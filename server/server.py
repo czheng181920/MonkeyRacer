@@ -1,3 +1,4 @@
+import collections
 from flask import Flask, request
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, join_room, leave_room, send
@@ -7,6 +8,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*")
 room_passage_map = {}
+room_client_map = collections.defaultdict(int)
 
 @socketio.on("connect")
 def on_connect():
@@ -43,6 +45,7 @@ def on_join(data):
     username = data['username']
     room = data['room']
     join_room(room)
+    room_client_map[room] += 1
     emit("setup_game", room_passage_map[room], to=room)
     print(username + " has entered the room.")
 
@@ -60,6 +63,7 @@ def create_room(data):
     join_room(room)
     passage = get_random_words(10)
     room_passage_map[room] = passage
+    room_client_map[room] += 1
     emit("setup_game", passage)
     print(room + " has been created.")
 
@@ -77,6 +81,10 @@ def on_leave(data):
     username = data['username']
     room = data['room']
     leave_room(room)
+    room_client_map[room] -= 1
+    if (room_client_map[room] == 0):
+        del room_passage_map[room]
+        del room_client_map[room]
     print(username + " has left the room.")
 
 @socketio.on("race_input")
