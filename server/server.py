@@ -91,7 +91,30 @@ def process_race_input(data):
     """
     passage = data['passage']
     input = data['input']
-    print(passage + '\n' + input)
+    length = min(len(passage), len(input))
+    for i in range(length):
+        if passage[i] != input[i]:
+            emit("incorrect_input", 
+                {
+                    'errorInd': i
+                }, to=request.sid)
+            return
+    if (len(passage) == len(input)):
+        emit("correct_input", to=request.sid)
+
+
+@socketio.on("validate_room")
+def validate_room(roomCode):
+    """Validates a room code
+
+    Args:
+        roomCode: String
+    """
+    if roomCode in room_passage_map:
+        emit("valid_room", to=request.sid)
+    else:
+        emit("invalid_room", to=request.sid)
+    return
 
 
 if __name__ == '__main__':
