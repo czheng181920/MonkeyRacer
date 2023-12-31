@@ -1,0 +1,6 @@
+@import "../styles/serkia_dark.css";
+
+.wrapper {
+  background: var(--bg-color);
+  display: flex;
+}
