@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration</title>
+    <!-- Include jQuery if you want to use it for AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <form>
+        <!-- Your registration form fields -->
+        <input type="text" id="username" placeholder="Username">
+        <span id="usernameFeedback"></span>
+        <!-- Other form fields -->
+        <button id="submitButton" type="submit">Submit</button>
+    <script>
+        async function postData(url = '', data = {}) {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            return response.json();
+        }
+
+        document.getElementById("submitButton").addEventListener('click', async function(event) {
+        event.preventDefault();  // Prevent the default form submission
+
+        let username = document.getElementById('username').value;
+        let isValid = await checkUsernameAvailability(username);
+        if (isValid) {
+            // Username is available, proceed with POST request
+            postData('/register', { username: username })
+                .then(data => {
+                    console.log(data)
+                    if (data.success) {
+                        // Redirect to the URL provided by the server
+                        window.location.href = data.redirect_url;
+                    } else {
+                        // Handle unsuccessful registration
+                        console.error(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);  // Handle errors
+                });
+            
+        } else {
+            // Show error or handle the case when the username is not available
+            alert("Username is taken, please choose another one.");
+        }
+    });
+
+    async function checkUsernameAvailability(username) {
+        try {
+            const response = await fetch('/validate-username?username=' + encodeURIComponent(username));
+            const data = await response.json();
+            return !data.is_taken;
+        } catch (error) {
+            console.error('Error:', error);
+            return false;  // Assume not valid in case of error
+        }
+    }
+    </script>
+    </form>
+
+    <script>
+        let debounceTimeout;
+
+        function validateUsername() {
+            let username = document.getElementById('username').value;
+            if (username) {
+                // Send AJAX request to Flask route
+                fetch('/validate-username?username=' + encodeURIComponent(username))
+                    .then(response => response.json())
+                    .then(data => {
+                        let feedback = document.getElementById('usernameFeedback');
+                        if (data.is_taken) {
+                            feedback.textContent = "Username is taken.";
+                        } else {
+                            feedback.textContent = "Username is available.";
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        }
+
+        function debounce(func, delay) {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(func, delay);
+        }
+
+        document.getElementById('username').addEventListener('keyup', function() {
+            debounce(validateUsername, 500); // Adjust the delay as needed
+        });
+    </script>
+</body>
+</html>
