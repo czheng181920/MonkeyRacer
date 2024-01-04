@@ -122,7 +122,6 @@ def validate_room(roomCode):
         emit("valid_room", to=request.sid)
     else:
         emit("invalid_room", to=request.sid)
-    return
 
 
 if __name__ == '__main__':
