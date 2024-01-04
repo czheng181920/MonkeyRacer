@@ -10,6 +10,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 room_passage_map = {}
 room_client_map = collections.defaultdict(int)
 
+
 @socketio.on("connect")
 def on_connect():
     """Event listener when client connects to the server"""
@@ -31,7 +32,8 @@ def message(data):
         data: String message
     """
     print("received: " + str(data))
-    
+
+
 @socketio.on("join")
 def on_join(data):
     """Event handler for when client joins a room
@@ -42,8 +44,8 @@ def on_join(data):
             room: String
         }
     """
-    username = data['username']
-    room = data['room']
+    username = data["username"]
+    room = data["room"]
     join_room(room)
     room_client_map[room] += 1
     emit("setup_game", room_passage_map[room], to=room)
@@ -59,13 +61,14 @@ def create_room(data):
             room: String
         }
     """
-    room = data['room']
+    room = data["room"]
     join_room(room)
     passage = get_random_words(10)
     room_passage_map[room] = passage
     room_client_map[room] += 1
     emit("setup_game", passage)
     print(room + " has been created.")
+
 
 @socketio.on("leave")
 def on_leave(data):
@@ -75,17 +78,18 @@ def on_leave(data):
         data: {
             username: String,
             room: String
-        
+
         }
     """
-    username = data['username']
-    room = data['room']
+    username = data["username"]
+    room = data["room"]
     leave_room(room)
     room_client_map[room] -= 1
-    if (room_client_map[room] == 0):
+    if room_client_map[room] == 0:
         del room_passage_map[room]
         del room_client_map[room]
     print(username + " has left the room.")
+
 
 @socketio.on("race_input")
 def process_race_input(data):
@@ -97,17 +101,14 @@ def process_race_input(data):
             input: String
         }
     """
-    passage = data['passage']
-    input = data['input']
+    passage = data["passage"]
+    input = data["input"]
     length = min(len(passage), len(input))
     for i in range(length):
         if passage[i] != input[i]:
-            emit("incorrect_input", 
-                {
-                    'errorInd': i
-                }, to=request.sid)
+            emit("incorrect_input", {"errorInd": i}, to=request.sid)
             return
-    if (len(passage) == len(input)):
+    if len(passage) == len(input):
         emit("correct_input", to=request.sid)
 
 
@@ -124,5 +125,5 @@ def validate_room(roomCode):
         emit("invalid_room", to=request.sid)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     socketio.run(app, debug=True, port=5001)

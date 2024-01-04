@@ -1,29 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { socket } from "../socket";
 
 export function JoinGame({ updateRoomCode }) {
   const [roomInput, setRoomInput] = useState("");
 
-  useEffect(() => {
-    socket.on("valid_room", () => {
-      updateRoomCode(roomInput);
-      socket.emit("join", {
-        room: roomInput,
-        username: "user",
-      });
-    });
-
-    socket.on("invalid_room", () => {
-      updateRoomCode(roomInput);
-      socket.emit("create_room", {
-        room: roomInput,
-      });
-    });
-  });
-
   function join(e, roomCode) {
     e.preventDefault();
     if (roomCode != "") {
+      socket.on("valid_room", () => {
+        updateRoomCode(roomInput);
+        socket.emit("join", {
+          room: roomInput,
+          username: "user",
+        });
+      });
+
+      socket.on("invalid_room", () => {
+        updateRoomCode(roomInput);
+        socket.emit("create_room", {
+          room: roomInput,
+        });
+      });
+
       socket.emit("validate_room", roomCode);
       updateRoomCode(roomCode);
     }
