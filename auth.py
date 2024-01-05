@@ -9,7 +9,7 @@ from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
 import google.auth.transport.requests
-from models import UserAuth
+from server.models import UserAuth
 
 app = Flask("Google Login App")
 app.secret_key = "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"#os.environ.get("GOOGLE_CLIENT_SECRET", None)
@@ -17,6 +17,7 @@ app.secret_key = "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"#os.environ.get("GOOGLE_CL
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1" # to allow Http traffic for local dev
 
 GOOGLE_CLIENT_ID =  "666060741312-1vo8j1t4ibea1q3hbn6vtitj2fbti0ci.apps.googleusercontent.com"#os.environ.get("GOOGLE_CLIENT_ID", None)
+MONGO = "mongodb+srv://johnmccormick:cNYh7vYYSPgrIF1X@monkeyracer.gerloau.mongodb.net/?retryWrites=true&w=majority"
 client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
 
 flow = Flow.from_client_secrets_file(
@@ -66,7 +67,7 @@ def callback():
     session["email"] = id_info.get("email")
 
     ## Check if the user already exists?
-    if UserAuth.checkUser(session["email"]):
+    if UserAuth.checkUser(session["email"], MONGO):
         return redirect("/protected_area")
     else:
         return redirect("/registration")
@@ -87,7 +88,7 @@ def index():
 @app.route("/protected_area")
 @login_is_required
 def protected_area():
-    user = UserAuth.getUsername(session["email"])
+    user = UserAuth.getUsername(session["email"], MONGO)
     return f"Hello {user}! <br/> <a href='/logout'><button>Logout</button></a>"
 
 @app.route("/registration")
@@ -97,7 +98,7 @@ def registration():
 @app.route('/validate-username', methods=['GET'])
 def validate_username():
     username = request.args.get('username')
-    is_taken = UserAuth.checkUsername(username)
+    is_taken = UserAuth.checkUsername(username, MONGO)
     return jsonify({'is_taken': is_taken})
 
 @app.route('/register', methods=['POST'])
@@ -106,7 +107,7 @@ def register():
     data = request.json
     username = data['username']
     email = session["email"]
-    valid = UserAuth.createUser(email, username)
+    valid = UserAuth.createUser(email, username, MONGO)
     if valid:
         return jsonify(success=True, redirect_url="/protected_area")
     else:

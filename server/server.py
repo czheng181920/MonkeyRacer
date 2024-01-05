@@ -139,7 +139,7 @@ def validate_room(roomCode):
 ## Google O-Auth
 load_dotenv()
 app.secret_key = os.getenv("GOOGLE_CLIENT_SECRET")
-
+MONGO = os.getenv("MONGO_URI")
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1" # to allow Http traffic for local dev
 
 GOOGLE_CLIENT_ID =  os.getenv("GOOGLE_CLIENT_ID")
@@ -192,7 +192,7 @@ def callback():
     session["email"] = id_info.get("email")
 
     ## Check if the user already exists?
-    if UserAuth.checkUser(session["email"]):
+    if UserAuth.checkUser(session["email"], MONGO):
         return redirect("/protected_area") ## User Already Exists
     else:
         return redirect("/registration") ## User does not exist
@@ -212,7 +212,7 @@ def registration():
 @app.route('/validate-username', methods=['GET'])
 def validate_username():
     username = request.args.get('username')
-    is_taken = UserAuth.checkUsername(username)
+    is_taken = UserAuth.checkUsername(username, MONGO)
     return jsonify({'is_taken': is_taken})
 
 @app.route('/register', methods=['POST'])
@@ -221,7 +221,7 @@ def register():
     data = request.json
     username = data['username']
     email = session["email"]
-    valid = UserAuth.createUser(email, username)
+    valid = UserAuth.createUser(email, username, MONGO)
     if valid:
         return jsonify(success=True, redirect_url="/protected_area")
     else:
