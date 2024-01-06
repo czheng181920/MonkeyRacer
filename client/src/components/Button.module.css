@@ -1,0 +1,17 @@
+@import "../styles/serkia_dark.css";
+
+.button {
+  background-color: var(--sub-alt-color);
+  border-radius: 0.25em;
+  border: 0;
+  padding: 15px;
+  cursor: pointer;
+  color: var(--text-color);
+  text-align: center;
+  transition: background 0.125s ease 0s, color 0.125s ease 0s, opacity 0.125s ease 0s;
+}
+
+.button:hover {
+  background-color: var(--text-color);
+  color: var(--sub-alt-color);
+}

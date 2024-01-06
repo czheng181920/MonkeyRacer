@@ -1,1 +1,5 @@
-export const getMembers = () => fetch('/api/members').then(res => res.json());
+export const getMembers = () => fetch('/api/members')
+  .then(res => res.json())
+  .catch((err) => {
+    console.log(err);
+  });

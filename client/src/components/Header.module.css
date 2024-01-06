@@ -1,6 +1,32 @@
 @import "../styles/serkia_dark.css";
 
 .wrapper {
-  background: var(--bg-color);
   display: flex;
+  font-size: larger;
+  font-weight: bold;
+  justify-content: space-between;
+}
+
+.monkey {
+  max-width: 2.5em;
+  fill: var(--main-color);
+}
+
+.labelWrapper{
+  display: flex;
+  gap: 0.2em;
+  align-items: flex-start;
+  font-size: larger;
+}
+
+.link {
+  transition: background 0.125s ease 0s, color 0.125s ease 0s;
+  cursor: pointer;
+  color: var(--sub-color);
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.link:hover{
+  color: var(--text-color);
 }

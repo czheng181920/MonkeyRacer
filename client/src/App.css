@@ -1,0 +1,19 @@
+#app{
+  display: grid;
+  grid-template-columns: auto minmax(0,1500px) auto;
+  justify-items: center;
+}
+
+#contentWrapper{
+  padding-top: 32px;
+  align-items: center;
+  display: grid;
+  gap: 2rem;
+  grid-auto-flow: row;
+  grid-template-rows: auto 1fr auto;
+  max-width: 1500px;
+  min-height: 100vh;
+  padding: 2rem;
+  transition: padding-top .125s;
+  width: 100%;
+}
