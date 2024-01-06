@@ -1,8 +1,20 @@
 import collections
-from flask import Flask, request
+import os
+import pathlib
+import ssl
+import json
+import requests
+from dotenv import load_dotenv
+
+from flask import Flask, request, session, abort, redirect, render_template, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, join_room, leave_room, send
 from wordgen import get_random_words
+from google.oauth2 import id_token
+from google_auth_oauthlib.flow import Flow
+from pip._vendor import cachecontrol
+import google.auth.transport.requests
+from models import UserAuth
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -123,6 +135,98 @@ def validate_room(roomCode):
     else:
         emit("invalid_room", to=request.sid)
     return
+
+## Google O-Auth
+load_dotenv()
+app.secret_key = os.getenv("GOOGLE_CLIENT_SECRET")
+MONGO = os.getenv("MONGO_URI")
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1" # to allow Http traffic for local dev
+
+GOOGLE_CLIENT_ID =  os.getenv("GOOGLE_CLIENT_ID")
+client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
+
+flow = Flow.from_client_secrets_file(
+    client_secrets_file=client_secrets_file,
+    scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
+    redirect_uri="https://127.0.0.1:5000/login/callback"
+)
+
+
+def login_is_required(function):
+    def wrapper(*args, **kwargs):
+        if "google_id" not in session:
+            return abort(401)  # Authorization required
+        else:
+            return function()
+
+    return wrapper
+
+
+@app.route("/login")
+def login():
+    authorization_url, state = flow.authorization_url()
+    session["state"] = state
+    return redirect(authorization_url)
+
+
+@app.route("/login/callback")
+def callback():
+    flow.fetch_token(authorization_response=request.url)
+
+    if not session["state"] == request.args["state"]:
+        abort(500)  # State does not match!
+
+    credentials = flow.credentials
+    request_session = requests.session()
+    cached_session = cachecontrol.CacheControl(request_session)
+    token_request = google.auth.transport.requests.Request(session=cached_session)
+
+    id_info = id_token.verify_oauth2_token(
+        id_token=credentials._id_token,
+        request=token_request,
+        audience=GOOGLE_CLIENT_ID
+    )
+
+    session["google_id"] = id_info.get("sub")
+    session["name"] = id_info.get("name")
+    session["email"] = id_info.get("email")
+
+    ## Check if the user already exists?
+    if UserAuth.checkUser(session["email"], MONGO):
+        return redirect("/protected_area") ## User Already Exists
+    else:
+        return redirect("/registration") ## User does not exist
+    
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
+
+
+@app.route("/registration")
+def registration():
+    return render_template('registration.html') ## This will need to change to be loading into the React version
+
+@app.route('/validate-username', methods=['GET'])
+def validate_username():
+    username = request.args.get('username')
+    is_taken = UserAuth.checkUsername(username, MONGO)
+    return jsonify({'is_taken': is_taken})
+
+@app.route('/register', methods=['POST'])
+def register():
+    print("register method called")
+    data = request.json
+    username = data['username']
+    email = session["email"]
+    valid = UserAuth.createUser(email, username, MONGO)
+    if valid:
+        return jsonify(success=True, redirect_url="/protected_area")
+    else:
+        return jsonify(success=False, message="Registration unsuccessful")
+
 
 
 if __name__ == '__main__':
