@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import TextForm from './components/TextForm';
-import { ConnectionManager } from './components/ConnectionManager';
 import { socket } from './socket'
 import Header from './components/Header';
 import Login from './components/Login';
