@@ -1,0 +1,14 @@
+@import "../styles/serkia_dark.css";
+
+.input{
+  background: var(--sub-alt-color);
+  border: none;
+  border-radius: var(--roundness);
+  caret-color: var(--main-color);
+  color: var(--text-color);
+  font-family: var(--font);
+  font-size: 1em;
+  line-height: 1.25em;
+  outline: none;
+  padding: 0.5em;
+}

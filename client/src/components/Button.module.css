@@ -4,7 +4,9 @@
   background-color: var(--sub-alt-color);
   border-radius: 0.25em;
   border: 0;
-  padding: 15px;
+  line-height: 1.25em;
+  outline: none;
+  padding: 0.5em;
   cursor: pointer;
   color: var(--text-color);
   text-align: center;

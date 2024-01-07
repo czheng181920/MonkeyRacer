@@ -35,13 +35,6 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route path="login" element={<Login/>} />
         </Routes>
-        {/* need to change the below later */}
-        <ConnectionManager />
-        <div className='temp'>
-          <br />
-          {passage}
-          <TextForm passage={passage} />
-        </div>
         <Footer></Footer>
       </div>
       <div className=""></div>

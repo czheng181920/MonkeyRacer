@@ -17,7 +17,7 @@ A typing racer inspired by MonkeyType
 
 ## Start Server 
 
->  `cd flask-server`
+>  `cd server`
 
 ### Creating and activating the virtual environment
 **On Unix or MacOS**
@@ -33,7 +33,7 @@ A typing racer inspired by MonkeyType
 
 ### Install dependencies
 
-> `pip install -r requirements.txt`
+> `pip3 install -r requirements.txt `
 
   
 
