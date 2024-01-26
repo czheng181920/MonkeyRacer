@@ -15,7 +15,7 @@
 .labelWrapper{
   display: flex;
   gap: 0.2em;
-  align-items: flex-start;
+  align-items: center;
   font-size: larger;
 }
 
@@ -23,7 +23,6 @@
   transition: background 0.125s ease 0s, color 0.125s ease 0s;
   cursor: pointer;
   color: var(--sub-color);
-  font-weight: bold;
   text-decoration: none;
 }
 

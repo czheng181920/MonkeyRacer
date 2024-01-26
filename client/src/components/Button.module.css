@@ -6,11 +6,13 @@
   border: 0;
   line-height: 1.25em;
   outline: none;
-  padding: 0.5em;
+  padding: 0.5rem;
   cursor: pointer;
   color: var(--text-color);
   text-align: center;
   transition: background 0.125s ease 0s, color 0.125s ease 0s, opacity 0.125s ease 0s;
+  font-size: 1rem;
+  font-weight: bold;
 }
 
 .button:hover {

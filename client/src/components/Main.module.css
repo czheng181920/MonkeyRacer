@@ -25,20 +25,22 @@
 
 .create {
   grid-area: create;
-  font-weight: bold;
-  width: 100%;
 }
 
 .join {
   grid-area: join;
-  font-weight: bold;
 }
 
-@media screen and (min-width: 480px) {
+.button {
+  width: 100%;
+}
+
+@media screen and (min-width: 768px) {
   .buttonContainer{
     grid-template-areas:
-    ". label  label ."
-    ". create join .";
-    gap: 4rem 20px;
+    "label  label "
+    "create join ";
+    gap: 2rem 2rem;
+    width: 35rem;
   }
 }

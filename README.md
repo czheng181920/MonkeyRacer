@@ -39,7 +39,7 @@ A typing racer inspired by MonkeyType
 
 ### Run the Flask application
 
-> `flask run`
+> `python3 server.py`
 
   
 

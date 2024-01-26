@@ -8,6 +8,7 @@ import Login from './components/Login';
 import Main from './components/Main';
 import Footer from './components/Footer';
 import { Routes, Route } from 'react-router-dom';
+import JoinGame from './components/JoinGame';
 
 function App() {
   const [passage, setPassage] = useState("");
@@ -34,6 +35,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="login" element={<Login/>} />
+          <Route path="join" element={<JoinGame />} />
         </Routes>
         <Footer></Footer>
       </div>

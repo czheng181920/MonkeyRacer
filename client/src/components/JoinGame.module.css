@@ -1,0 +1,40 @@
+@import "../styles/serkia_dark.css";
+
+.wrapper{
+  display: grid;
+  grid-template-areas:
+    "label"
+    "."
+    "input"
+    "submit";
+  gap: 2rem 0rem;
+}
+
+@media screen and (min-width: 768px) {
+  .wrapper {
+    grid-template-areas:
+    ". label  label ."
+    ". input input ."
+    ". submit submit .";
+    gap: 1rem 20px;
+  }
+}
+
+.label{
+  grid-area: label;
+  text-align: center;
+  font-weight: bold;
+}
+
+.submit {
+  grid-area: submit;
+  width: 100%;
+}
+
+.input {
+  grid-area: input;
+}
+
+.button {
+  width: 100%;
+}
