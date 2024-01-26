@@ -24,3 +24,11 @@ code {
 input, button, select, option, textarea {
   font-size: 100%;
 }
+
+h1{
+  font-size: 2rem;
+  margin-block-start: 0em;
+  margin-block-end: 0em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}

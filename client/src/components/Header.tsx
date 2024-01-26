@@ -12,7 +12,9 @@ const Header = () => {
         <Link to="/">
           <Monkey className={styles.monkey}></Monkey>
         </Link>
-        <Label className={styles.headingTitle}>monkeyracer</Label>
+        <Link to="/">
+          <h1 className={styles.headingTitle}>monkeyracer</h1>
+        </Link>
       </div>
       <Link to="login">
         <FontAwesomeIcon icon={faUser} className={styles.link}/>
