@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { socket } from "../socket";
+import Input from "./Input";
 
 const TextForm = (props) => {
     const [text, setText] = useState("");
@@ -15,7 +16,7 @@ const TextForm = (props) => {
 
     return (
         <>
-            <input 
+            <Input 
                 type="text"
                 value={text} 
                 onChange={(e) => sendText(e.target.value)} 

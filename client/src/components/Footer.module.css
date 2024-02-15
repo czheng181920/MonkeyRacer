@@ -1,0 +1,22 @@
+@import "../styles/serkia_dark.css";
+
+.footer {
+  color: var(--sub-color);
+}
+
+a, a:link, a:visited, a:active {
+  font-size: smaller;
+  transition: background 0.125s ease 0s, color 0.125s ease 0s;
+  cursor: pointer;
+  color: inherit;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+a:hover{
+  color: var(--text-color);
+}
+.label {
+  padding-left: 1em;
+  cursor: pointer;
+}

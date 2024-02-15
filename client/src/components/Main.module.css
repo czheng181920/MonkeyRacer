@@ -1,0 +1,46 @@
+@import "../styles/serkia_dark.css";
+
+.wrapper {
+  height: 100%;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+
+.buttonContainer{
+  display: grid;
+  grid-template-areas:
+    "label"
+    "."
+    "create"
+    "join";
+  gap: 2rem 0rem;
+}
+
+.label{
+  grid-area: label;
+  font-weight: bold;
+  text-align: center;
+}
+
+.create {
+  grid-area: create;
+}
+
+.join {
+  grid-area: join;
+}
+
+.button {
+  width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+  .buttonContainer{
+    grid-template-areas:
+    "label  label "
+    "create join ";
+    gap: 2rem 2rem;
+    width: 35rem;
+  }
+}
