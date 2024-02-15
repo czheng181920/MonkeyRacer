@@ -9,9 +9,15 @@ import Main from './components/Main';
 import Footer from './components/Footer';
 import { Routes, Route } from 'react-router-dom';
 import JoinGame from './components/JoinGame';
+import CreateGame from './components/CreateGame';
+
+// Create a context
+export const ConnectionContext = React.createContext();
 
 function App() {
   const [passage, setPassage] = useState("");
+  const [room, setRoom] = useState("");
+  const [roomInput, setRoomInput] = useState("");
 
   useEffect(() => {
     socket.on('setup_game', (words) => {
@@ -25,23 +31,55 @@ function App() {
     socket.on('correct_input', () => {
       
     });
+
+    return () => {
+      socket.off('setup_game');
+      socket.off('incorrect_input');
+      socket.off('correct_input');
+    }
   }, []);
 
-  return (
-    <div className="App" id="app">
-      <div className=""></div>
-      <div id="contentWrapper">
-        <Header />
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="login" element={<Login/>} />
-          <Route path="join" element={<JoinGame />} />
-        </Routes>
-        <Footer></Footer>
-      </div>
-      <div className=""></div>
-    </div>
+  //separate useEffect so that we can isolate the functions that depend on roomInput
+  useEffect(() => {
+    socket.on('valid_room', () => {
+      setRoom(roomInput);
+      socket.emit('join', {
+        room: roomInput,
+        username: "user"
+      });
+    });
 
+    socket.on('invalid_room', () => {
+      setRoom(roomInput);
+      socket.emit('create_room', {
+        room: roomInput
+      });
+    });
+    return () => {
+      socket.off('valid_room');
+      socket.off('invalid_room');
+    }
+  },[roomInput]);
+  
+  
+
+  return (
+    <ConnectionContext.Provider value={{ room, setRoom, roomInput, setRoomInput }}>
+      <div className="App" id="app">
+        <div className=""></div>
+        <div id="contentWrapper">
+          <Header />
+          <Routes>
+            <Route path="/" element={<Main />} />
+            <Route path="login" element={<Login/>} />
+            <Route path="join" element={<JoinGame />} />
+            <Route path="create" element={<CreateGame />} />
+          </Routes>
+          <Footer></Footer>
+        </div>
+        <div className=""></div>
+      </div>
+    </ConnectionContext.Provider>
       
   );
 }

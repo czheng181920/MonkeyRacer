@@ -1,30 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { socket } from '../socket';
+import { useContext } from 'react';
+import { ConnectionContext } from '../App';
 
 export function ConnectionManager() {
-    const [room, setRoom] = useState("");
-    const [roomInput, setRoomInput] = useState("");
-
-    useEffect(() => {
-        socket.on('valid_room', () => {
-            setRoom(roomInput);
-            socket.emit('join', {
-                room: roomInput,
-                username: "user"
-            });
-        });
-
-        socket.on('invalid_room', () => {
-            setRoom(roomInput);
-            socket.emit('create_room', {
-                room: roomInput
-            });
-        });
-    });
+    const {room, setRoom, roomInput, setRoomInput} = useContext(ConnectionContext);
+    console.log(room);
 
     function join(e, roomCode) {
         e.preventDefault();
-        if (roomCode != "") {
+        if (roomCode !== "") {
             socket.emit('leave', {
                 room: room,
                 username: "user"
@@ -65,11 +50,11 @@ export function ConnectionManager() {
 
     return (
         <>
-            <button onClick={ createRoom } disabled={room != ""}>Create room</button>
+            <button onClick={ createRoom } disabled={room !== ""}>Create room</button>
             <form>
                 <input type="text" value={roomInput} onChange={(e) => setRoomInput(e.target.value)} />
                 <button onClick={ (e) => join(e, roomInput) }>Join room</button>
-                <button onClick={ leave } disabled={room == ""}>Leave room</button>
+                <button onClick={ leave } disabled={room === ""}>Leave room</button>
             </form>
             
         </>
