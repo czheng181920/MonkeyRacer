@@ -1,6 +1,5 @@
 import styles from "./Header.module.css";
 import { Monkey } from "../assets/Monkey";
-import Label from "./Label";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import { Link } from "react-router-dom"

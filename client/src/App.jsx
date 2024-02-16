@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import TextForm from './components/TextForm';
-import { ConnectionManager } from './components/ConnectionManager';
 import { socket } from './socket'
 import Header from './components/Header';
 import Login from './components/Login';
@@ -9,7 +8,7 @@ import Main from './components/Main';
 import Footer from './components/Footer';
 import { Routes, Route } from 'react-router-dom';
 import JoinGame from './components/JoinGame';
-import CreateGame from './components/CreateGame';
+import Game from './components/Game';
 
 // Create a context
 export const ConnectionContext = React.createContext();
@@ -73,7 +72,7 @@ function App() {
             <Route path="/" element={<Main />} />
             <Route path="login" element={<Login/>} />
             <Route path="join" element={<JoinGame />} />
-            <Route path="create" element={<CreateGame />} />
+            <Route path="game" element={<Game />} />
           </Routes>
           <Footer></Footer>
         </div>
