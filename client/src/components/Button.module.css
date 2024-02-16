@@ -19,3 +19,13 @@
   background-color: var(--text-color);
   color: var(--sub-alt-color);
 }
+
+.inverse {
+  background-color: var(--text-color);
+  color: var(--sub-alt-color);
+}
+
+.inverse:hover{
+  background-color: var(--sub-alt-color);
+  color: var(--text-color);
+}

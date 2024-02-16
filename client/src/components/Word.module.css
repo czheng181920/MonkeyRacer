@@ -1,0 +1,16 @@
+@import "../styles/serkia_dark.css";
+
+.correct{
+  color: var(--text-color);
+}
+
+.wrong {
+  color: var(--error-color)
+}
+
+.inactive{
+  color: var(--sub-color);
+}
+.extraWrong{
+  color: var(--error-extra-color);
+}
