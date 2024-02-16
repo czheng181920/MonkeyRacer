@@ -8,6 +8,10 @@ import Main from './components/Main';
 import Footer from './components/Footer';
 import { Routes, Route } from 'react-router-dom';
 import JoinGame from './components/JoinGame';
+<<<<<<< HEAD
+=======
+import CreateGame from './components/CreateGame';
+>>>>>>> dd3a1ede01a5d58351ee6fa4c0c4018e1f14ecdc
 import Game from './components/Game';
 
 // Create a context
